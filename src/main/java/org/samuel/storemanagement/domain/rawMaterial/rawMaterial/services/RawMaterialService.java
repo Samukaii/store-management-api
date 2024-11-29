@@ -38,8 +38,10 @@ public class RawMaterialService {
         return save(material);
     }
 
-    public List<RawMaterial> autocomplete(Optional<String> search) {
-        return search.map(repository::searchAllByText).orElseGet(this::findAll);
+    public List<RawMaterial> autocomplete(Map<String, String> filters) {
+        var specification = filterSpecificationService.buildSpecification(filters);
+
+        return repository.findAll(specification);
     }
 
     public RawMaterial findById(Long id) throws RawMaterialNotFoundException {
@@ -64,7 +66,7 @@ public class RawMaterialService {
     }
 
     public void deleteById(Long id) {
-        repository.deleteById(id);
+        delete(id);
     }
 
     public List<RawMaterial> findAll(Map<String, String> filters) {
@@ -93,5 +95,14 @@ public class RawMaterialService {
         publisher.emitChanges(result);
 
         return result;
+    }
+
+    @SneakyThrows
+    public void delete(Long id) {
+        RawMaterial result = findById(id);
+
+        publisher.emitDelete(result);
+
+        repository.deleteById(id);
     }
 }

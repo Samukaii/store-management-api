@@ -7,10 +7,10 @@ import org.springframework.context.ApplicationEvent;
 
 @Getter
 @Setter
-public class RawMaterialChangeEvent extends ApplicationEvent {
+public class RawMaterialDeleteEvent extends ApplicationEvent {
     private RawMaterial rawMaterial;
 
-    public RawMaterialChangeEvent(RawMaterial event) {
+    public RawMaterialDeleteEvent(RawMaterial event) {
         super(event);
         rawMaterial = event;
     }

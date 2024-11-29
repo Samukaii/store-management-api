@@ -10,7 +10,11 @@ import org.springframework.stereotype.Component;
 public class RawMaterialPublisher {
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    public void emitChanges(RawMaterial foodInput) {
-        applicationEventPublisher.publishEvent(new RawMaterialChangeEvent(foodInput));
+    public void emitChanges(RawMaterial rawMaterial) {
+        applicationEventPublisher.publishEvent(new RawMaterialPersistEvent(rawMaterial));
+    }
+
+    public void emitDelete(RawMaterial rawMaterial) {
+        applicationEventPublisher.publishEvent(new RawMaterialDeleteEvent(rawMaterial));
     }
 }

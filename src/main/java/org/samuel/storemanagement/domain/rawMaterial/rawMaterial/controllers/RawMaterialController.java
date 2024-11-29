@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @CrossOrigin
 @RestController
@@ -35,8 +34,8 @@ public class RawMaterialController {
     }
 
     @GetMapping("/autocomplete")
-    public ResponseEntity<List<RawMaterialViewResponse>> autocomplete(@RequestParam Optional<String> search) {
-        return ResponseEntity.ok(mapper.toListDto(service.autocomplete(search)));
+    public ResponseEntity<List<RawMaterialViewResponse>> autocomplete(@RequestParam Map<String, String> filters) {
+        return ResponseEntity.ok(mapper.toListDto(service.autocomplete(filters)));
     }
 
     @GetMapping("/{id}")
