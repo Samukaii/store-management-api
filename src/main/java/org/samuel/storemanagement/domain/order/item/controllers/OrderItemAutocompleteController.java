@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 @CrossOrigin
 @RestController
@@ -21,7 +21,7 @@ public class OrderItemAutocompleteController {
 
     @GetMapping("/autocomplete")
     @SneakyThrows
-    public ResponseEntity<List<OrderItemResponse>> autocomplete(@RequestParam Optional<String> search) {
-        return ResponseEntity.ok().body(mapper.toListDto(service.autocomplete(search.orElse(""))));
+    public ResponseEntity<List<OrderItemResponse>> autocomplete(@RequestParam Map<String, String> filters) {
+        return ResponseEntity.ok().body(mapper.toListDto(service.autocomplete(filters)));
     }
 }

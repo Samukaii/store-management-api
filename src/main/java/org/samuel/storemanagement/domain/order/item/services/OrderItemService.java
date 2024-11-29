@@ -9,15 +9,18 @@ import org.samuel.storemanagement.domain.order.item.models.OrderItem;
 import org.samuel.storemanagement.domain.order.item.repositories.OrderItemRepository;
 import org.samuel.storemanagement.domain.order.order.models.Order;
 import org.samuel.storemanagement.domain.product.product.models.Product;
+import org.samuel.storemanagement.general.filters.FilterSpecificationService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class OrderItemService {
     private final OrderItemRepository repository;
     private final OrderItemEventPublisher publisher;
+    private final FilterSpecificationService<OrderItem> specificationService;
 
     @SneakyThrows
     public void importOrderItems(Order order, List<OrderItemCreate> orderItems) {
@@ -49,8 +52,10 @@ public class OrderItemService {
         return repository.findAllByName(product.getIntegrationName());
     }
 
-    public List<OrderItem> autocomplete(String search) {
-        return repository.searchAllDistinctByName(search.toLowerCase());
+    public List<OrderItem> autocomplete(Map<String, String> filters) {
+        var specification = specificationService.buildSpecification(filters);
+
+        return repository.findAll(specification);
     }
 
     public void save(OrderItem orderItem) {
