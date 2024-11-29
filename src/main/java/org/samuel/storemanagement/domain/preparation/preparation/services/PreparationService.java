@@ -9,9 +9,11 @@ import org.samuel.storemanagement.domain.preparation.preparation.exceptions.Prep
 import org.samuel.storemanagement.domain.preparation.preparation.mappers.PreparationMapper;
 import org.samuel.storemanagement.domain.preparation.preparation.models.Preparation;
 import org.samuel.storemanagement.domain.preparation.preparation.repositories.PreparationRepository;
+import org.samuel.storemanagement.general.filters.FilterSpecificationService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -21,6 +23,7 @@ public class PreparationService {
     private final PreparationPublisher publisher;
     private final PreparationMapper mapper;
     private final PreparationCalculationsService calculationsService;
+    private final FilterSpecificationService<Preparation> specificationService;
 
     @SneakyThrows
     public Preparation create(PreparationCreate payload) {
@@ -33,8 +36,10 @@ public class PreparationService {
         return foundPreparation.orElseThrow(PreparationNotFoundException::new);
     }
 
-    public List<Preparation> autocomplete(Optional<String> search) {
-        return search.map(repository::searchAllByText).orElseGet(this::findAll);
+    public List<Preparation> autocomplete(Map<String, String> filters) {
+        var specification = specificationService.buildSpecification(filters);
+
+        return repository.findAll(specification);
     }
 
     @SneakyThrows
