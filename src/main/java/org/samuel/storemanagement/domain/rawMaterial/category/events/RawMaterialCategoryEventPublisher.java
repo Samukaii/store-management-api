@@ -11,6 +11,6 @@ public class RawMaterialCategoryEventPublisher {
     private final ApplicationEventPublisher applicationEventPublisher;
 
     public void emitChanges(RawMaterialCategory category) {
-        applicationEventPublisher.publishEvent(new RawMaterialCategoryChangeEvent(category));
+        applicationEventPublisher.publishEvent(new RawMaterialCategoryPersistEvent(category));
     }
 }

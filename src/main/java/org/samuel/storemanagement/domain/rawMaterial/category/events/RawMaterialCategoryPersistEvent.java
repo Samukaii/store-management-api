@@ -7,10 +7,10 @@ import org.springframework.context.ApplicationEvent;
 
 @Getter
 @Setter
-public class RawMaterialCategoryChangeEvent extends ApplicationEvent {
+public class RawMaterialCategoryPersistEvent extends ApplicationEvent {
     private RawMaterialCategory category;
 
-    public RawMaterialCategoryChangeEvent(RawMaterialCategory event) {
+    public RawMaterialCategoryPersistEvent(RawMaterialCategory event) {
         super(event);
         category = event;
     }

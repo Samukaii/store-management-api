@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 @CrossOrigin
 @RestController
@@ -29,8 +29,8 @@ public class RawMaterialCategoryController {
 
     @GetMapping("/autocomplete")
     @SneakyThrows
-    public ResponseEntity<List<RawMaterialCategoryViewResponse>> autocomplete(@RequestParam Optional<String> search) {
-        return ResponseEntity.ok().body(mapper.toListDto(service.autocomplete(search)));
+    public ResponseEntity<List<RawMaterialCategoryViewResponse>> autocomplete(@RequestParam Map<String, String> filters) {
+        return ResponseEntity.ok().body(mapper.toListDto(service.autocomplete(filters)));
     }
 
     @GetMapping

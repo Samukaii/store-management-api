@@ -8,16 +8,18 @@ import org.samuel.storemanagement.domain.rawMaterial.category.exceptions.RawMate
 import org.samuel.storemanagement.domain.rawMaterial.category.mappers.RawMaterialCategoryMapper;
 import org.samuel.storemanagement.domain.rawMaterial.category.models.RawMaterialCategory;
 import org.samuel.storemanagement.domain.rawMaterial.category.repositories.RawMaterialCategoryRepository;
+import org.samuel.storemanagement.general.filters.FilterSpecificationService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class RawMaterialCategoryService {
     private final RawMaterialCategoryRepository repository;
     private final RawMaterialCategoryMapper mapper;
+    private final FilterSpecificationService<RawMaterialCategory> specificationService;
 
     @SneakyThrows
     public RawMaterialCategory create(RawMaterialCategoryCreate payload) {
@@ -34,8 +36,10 @@ public class RawMaterialCategoryService {
         return repository.findAll();
     }
 
-    public List<RawMaterialCategory> autocomplete(Optional<String> search) {
-        return search.map(repository::searchAllByText).orElseGet(this::findAll);
+    public List<RawMaterialCategory> autocomplete(Map<String, String> filters) {
+        var specification = specificationService.buildSpecification(filters);
+
+        return repository.findAll(specification);
     }
 
     @SneakyThrows
@@ -49,5 +53,11 @@ public class RawMaterialCategoryService {
 
     public void deleteById(Long id) {
         repository.deleteById(id);
+    }
+
+    public void updateAssociation(RawMaterialCategory category, Boolean hasAssociation) {
+        category.setHasAssociation(hasAssociation);
+
+        repository.save(category);
     }
 }
