@@ -87,6 +87,8 @@ public class ProductsService {
     public Product updateById(Long id, ProductUpdate product) throws ProductNotFoundException {
         Product productToUpdate = repository.findById(id).orElseThrow(ProductNotFoundException::new);
 
+        publisher.emitPrePersist(productToUpdate);
+
         if (product.getName() != null)
             productToUpdate.setName(product.getName());
 
@@ -112,7 +114,7 @@ public class ProductsService {
     }
 
     public void deleteById(Long id) {
-        repository.deleteById(id);
+        delete(id);
     }
 
     public List<Product> findAll(Map<String, String> filters) {
@@ -122,10 +124,19 @@ public class ProductsService {
     }
 
     public Product save(Product product) {
+
         Product result = repository.save(product);
 
-        publisher.emitChanges(result);
+        publisher.emitPostPersist(result);
 
         return result;
+    }
+
+    public void delete(Long id) {
+        Product result = findById(id);
+
+        publisher.emitDelete(result);
+
+        repository.deleteById(id);
     }
 }

@@ -6,7 +6,7 @@ import org.samuel.storemanagement.domain.order.item.models.OrderItem;
 import org.samuel.storemanagement.domain.order.item.services.OrderItemService;
 import org.samuel.storemanagement.domain.product.ingredient.events.ProductIngredientChangeEvent;
 import org.samuel.storemanagement.domain.product.ingredient.models.ProductIngredient;
-import org.samuel.storemanagement.domain.product.product.events.ProductEventChange;
+import org.samuel.storemanagement.domain.product.product.events.ProductEventPostPersist;
 import org.samuel.storemanagement.domain.product.product.models.Product;
 import org.samuel.storemanagement.domain.product.product.repositories.ProductsRepository;
 import org.springframework.stereotype.Service;
@@ -40,7 +40,7 @@ public class ProductsCalculationsService {
         repository.save(product);
     }
 
-    public void applyCalculationChanges(ProductEventChange event) {
+    public void applyCalculationChanges(ProductEventPostPersist event) {
         Product previous = event.getPrevious();
         Product current = event.getCurrent();
 

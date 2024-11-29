@@ -11,8 +11,18 @@ public class ProductEventPublisher {
     private final ApplicationEventPublisher publisher;
     private Product previous;
 
-    public void emitChanges(Product product) {
-        publisher.publishEvent(new ProductEventChange(product, previous));
+    public void emitPrePersist(Product product) {
+        publisher.publishEvent(new ProductEventPrePersist(product));
+        previous = product;
+    }
+
+    public void emitPostPersist(Product product) {
+        publisher.publishEvent(new ProductEventPostPersist(product, previous));
+        previous = product;
+    }
+
+    public void emitDelete(Product product) {
+        publisher.publishEvent(new ProductEventDelete(product, previous));
         previous = product;
     }
 }

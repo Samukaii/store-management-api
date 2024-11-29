@@ -2,7 +2,7 @@ package org.samuel.storemanagement.domain.product.ingredient.events;
 
 import lombok.RequiredArgsConstructor;
 import org.samuel.storemanagement.domain.product.ingredient.services.ProductIngredientService;
-import org.samuel.storemanagement.domain.rawMaterial.rawMaterial.events.RawMaterialChangeEvent;
+import org.samuel.storemanagement.domain.rawMaterial.rawMaterial.events.RawMaterialPersistEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -14,7 +14,7 @@ public class ProductIngredientEventHandler {
 
     @EventListener
     @Async
-    public void updateTotalCost(RawMaterialChangeEvent event) {
+    public void updateTotalCost(RawMaterialPersistEvent event) {
         if(event.getRawMaterial().getIngredients() == null) return;
 
         event.getRawMaterial().getIngredients().forEach(service::recalculateAndSave);

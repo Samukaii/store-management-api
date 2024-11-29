@@ -27,7 +27,7 @@ public class ProductEventHandler {
 
     @EventListener
     @Async
-    public void onProductChange(ProductEventChange event) {
+    public void onProductChange(ProductEventPostPersist event) {
         calculationsService.applyCalculationChanges(event);
     }
 }

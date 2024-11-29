@@ -8,16 +8,18 @@ import org.samuel.storemanagement.domain.product.category.mappers.ProductCategor
 import org.samuel.storemanagement.domain.product.category.models.ProductCategory;
 import org.samuel.storemanagement.domain.product.category.repositories.ProductCategoryRepository;
 import org.samuel.storemanagement.domain.product.product.exceptions.ProductNotFoundException;
+import org.samuel.storemanagement.general.filters.FilterSpecificationService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class ProductCategoryService {
     private final ProductCategoryRepository repository;
     private final ProductCategoryMapper mapper;
+    private final FilterSpecificationService<ProductCategory> specificationService;
 
     @SneakyThrows
     public ProductCategory create(ProductCategoryCreate payload) {
@@ -34,8 +36,10 @@ public class ProductCategoryService {
         return repository.findAll();
     }
 
-    public List<ProductCategory> autocomplete(Optional<String> search) {
-        return search.map(repository::searchAllByText).orElseGet(this::findAll);
+    public List<ProductCategory> autocomplete(Map<String, String> filters) {
+        var specification = specificationService.buildSpecification(filters);
+
+        return repository.findAll(specification);
     }
 
     @SneakyThrows
@@ -49,5 +53,13 @@ public class ProductCategoryService {
 
     public void deleteById(Long id) {
         repository.deleteById(id);
+    }
+
+    public void updateAssociation(ProductCategory category) {
+        var size = category.getProducts().size();
+
+        category.setHasAssociation(size != 0);
+
+        repository.save(category);
     }
 }

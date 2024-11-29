@@ -7,14 +7,12 @@ import org.springframework.context.ApplicationEvent;
 
 @Getter
 @Setter
-public class ProductEventChange extends ApplicationEvent {
-    Product previous;
-    Product current;
+public class ProductEventPrePersist extends ApplicationEvent {
+    Product product;
 
-    public ProductEventChange(Product current, Product previous) {
-        super(current);
-        this.previous = previous;
-        this.current = current;
+    public ProductEventPrePersist(Product product) {
+        super(product);
+        this.product = product;
     }
 }
 
