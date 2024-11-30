@@ -54,12 +54,4 @@ public class ProductCategoryService {
     public void deleteById(Long id) {
         repository.deleteById(id);
     }
-
-    public void updateAssociation(ProductCategory category) {
-        var size = category.getProducts().size();
-
-        category.setHasAssociation(size != 0);
-
-        repository.save(category);
-    }
 }

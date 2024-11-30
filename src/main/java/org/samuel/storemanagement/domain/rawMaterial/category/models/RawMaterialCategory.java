@@ -16,7 +16,6 @@ public class RawMaterialCategory {
     private Long id;
 
     private String name;
-    private Boolean hasAssociation;
 
     @OneToMany
     @JoinColumn(name = "category_id")

@@ -54,10 +54,4 @@ public class RawMaterialCategoryService {
     public void deleteById(Long id) {
         repository.deleteById(id);
     }
-
-    public void updateAssociation(RawMaterialCategory category, Boolean hasAssociation) {
-        category.setHasAssociation(hasAssociation);
-
-        repository.save(category);
-    }
 }

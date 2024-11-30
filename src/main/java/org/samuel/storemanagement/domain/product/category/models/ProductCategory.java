@@ -17,8 +17,6 @@ public class ProductCategory {
 
     private String name;
 
-    private Boolean hasAssociation;
-
     @OneToMany
     @JoinColumn(name = "category_id")
     private List<Product> products = new ArrayList<>();
