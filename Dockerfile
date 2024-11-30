@@ -1,6 +1,13 @@
+FROM maven:3.8.6-openjdk-17-slim AS build
+
+WORKDIR /app
+
+COPY . .
+
+RUN mvn clean package -DskipTests
+
 FROM openjdk:17-jdk-alpine
 
-ARG JAR_FILE=target/*.jar
-COPY ${JAR_FILE} app.jar
+COPY --from=build /app/target/store-management-1.0.0.jar app.jar
 
 ENTRYPOINT ["java", "-jar", "/app.jar"]
