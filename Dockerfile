@@ -6,7 +6,6 @@ RUN mvn clean package -DskipTests
 
 WORKDIR /app
 
-
 COPY --from=build /app/target/store-management-1.0.0.jar app.jar
 
 ENTRYPOINT ["java", "-jar", "/app.jar"]
