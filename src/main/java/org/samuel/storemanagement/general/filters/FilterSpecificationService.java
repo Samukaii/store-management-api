@@ -6,7 +6,7 @@ import jakarta.persistence.criteria.Root;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.Map;
@@ -66,7 +66,7 @@ public class FilterSpecificationService<T> {
     private void registerDefaultOperators() {
         operators.put("min", (root, builder, key, value) -> {
             try {
-                LocalDateTime minDate = LocalDateTime.parse(value);
+                ZonedDateTime minDate = ZonedDateTime.parse(value);
                 return builder.greaterThanOrEqualTo(resolvePath(root, key), minDate);
             } catch (DateTimeParseException e) {
                 double minValue = Double.parseDouble(value);
@@ -76,7 +76,7 @@ public class FilterSpecificationService<T> {
 
         operators.put("max", (root, builder, key, value) -> {
             try {
-                LocalDateTime maxDate = LocalDateTime.parse(value);
+                ZonedDateTime maxDate = ZonedDateTime.parse(value);
                 return builder.lessThanOrEqualTo(resolvePath(root, key), maxDate);
             } catch (DateTimeParseException e) {
                 double maxValue = Double.parseDouble(value);
