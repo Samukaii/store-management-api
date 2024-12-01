@@ -1,16 +1,16 @@
 package org.samuel.storemanagement.domain.analytics.dtos;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 
 @Data
-@Builder
 @AllArgsConstructor
-public class OrderByPeriodResponse {
-    Double total;
-    LocalDate date;
+public class OrderItemSelling {
     Integer quantity;
+    Double total;
+    Double profitMargin;
+    String name;
+    ZonedDateTime date;
 }
