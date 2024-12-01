@@ -3,7 +3,6 @@ package org.samuel.storemanagement.domain.order.order.controllers;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.samuel.storemanagement.domain.order.order.dtos.OrderFiltersParams;
 import org.samuel.storemanagement.domain.order.order.dtos.OrderResponse;
 import org.samuel.storemanagement.domain.order.order.mappers.OrderMapper;
 import org.samuel.storemanagement.domain.order.order.services.OrderService;
@@ -12,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin
 @RestController
@@ -31,7 +31,7 @@ public class OrderController {
 
     @GetMapping
     @SneakyThrows
-    public ResponseEntity<List<OrderResponse>> getAll(@ModelAttribute OrderFiltersParams params) {
+    public ResponseEntity<List<OrderResponse>> getAll(@RequestParam Map<String, String> params) {
         return ResponseEntity.ok().body(mapper.toListDto(service.findAll(params)));
     }
 
