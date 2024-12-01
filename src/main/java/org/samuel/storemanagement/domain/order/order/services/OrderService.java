@@ -49,17 +49,18 @@ public class OrderService {
 
     @SneakyThrows
     private void create(ImportedOrder imported) {
-        Order existentOrder = repository.findByCode(imported.getTitle()).orElse(
-                Order.builder()
-                        .code(imported.getTitle())
-                        .build()
-        );
+        Order existentOrder = repository.findByCode(imported.getTitle()).orElse(null);
 
-        existentOrder.setDate(toZoneDate(imported.getDate()));
-        existentOrder.setCustomerInfo(imported.getCustomerInfo());
-        existentOrder.setItems(orderItemMapper.toListModel(imported.getItems()));
+        if (existentOrder != null) return;
 
-        Order result = recalculateAndSave(existentOrder);
+        Order newOrder = Order.builder()
+                .code(imported.getTitle())
+                .date(toZoneDate(imported.getDate()))
+                .customerInfo(imported.getCustomerInfo())
+                .items(orderItemMapper.toListModel(imported.getItems()))
+                .build();
+
+        Order result = recalculateAndSave(newOrder);
 
         orderItemService.importOrderItems(result, imported.getItems());
     }
