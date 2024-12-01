@@ -26,15 +26,15 @@ public class Product {
     private String integrationName = "";
     private Double price = 0d;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name="product_id")
     private List<ProductIngredient> ingredients = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name="product_id")
     private List<OrderItem> orders = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="category_id")
     private ProductCategory category;
 
