@@ -43,7 +43,7 @@ produtos, pedidos e estatísticas de vendas em uma loja. Abaixo estão as princi
 
 ### Estatísticas
 
-- Obtenha informações detalhadas da performance da loja:
+- Obtenha informações detalhadas do desempenho da loja:
     - **Produtos mais vendidos**: Listagem calculada com base nos itens de todos os pedidos.
     - **Vendas por período**: Lista de todas as vendas feitas, agrupadas por dia ou por mês.
 
@@ -151,7 +151,7 @@ Aceita números ou datas. Retorna itens com valores abaixo do especificado.
 }
 ```
 
-Aceita booleanos, números, datas, strings, etc., dependendo do tipo da propriedade. Retorna itens com valores exatamente
+Aceita valores booleanos, números, datas, strings, etc., dependendo do tipo da propriedade. Retorna itens com valores exatamente
 iguais ao passado.
 
 ```json
@@ -177,7 +177,6 @@ Ignora o valor passado e retorna itens cuja propriedade esteja nula.
 }
 ```
 
-property:hasAssociation
 Retorna apenas itens que possuam ou não possuam associações com outra entidade definida na propriedade.
 
 ### Ordenação dos Resultados
@@ -196,7 +195,7 @@ a aplicação altamente adaptável a diferentes cenários de uso.
 
 ## Conclusão
 
-Este projeto foi desenvolvido com o objetivo de oferecer uma solução completa para o gerenciamento de insumos, preparos,
+Este projeto foi desenvolvido para oferecer uma solução completa para o gerenciamento de insumos, preparos,
 produtos, pedidos e estatísticas em um ambiente de vendas. A estrutura modular e bem organizada do código facilita a
 manutenção e a adição de novas funcionalidades, enquanto o uso de tecnologias modernas como Spring Boot, Docker,
 PostgreSQL e Flyway garante desempenho, escalabilidade e confiabilidade.
