@@ -26,6 +26,6 @@ echo "Imagem '$image_name' criada com sucesso."
 
 # Rodar um novo container
 echo "Iniciando um novo container '$container_name'..."
-docker run -d --name "$container_name" --env-file .env -p 7808:8080 "$image_name" > /dev/null 2>&1
+docker run -d --name "$container_name" --restart unless-stopped --env-file .env -p 7808:8080 "$image_name" > /dev/null 2>&1
 echo "Projeto web iniciado na url http://localhost:4000 ."
 
