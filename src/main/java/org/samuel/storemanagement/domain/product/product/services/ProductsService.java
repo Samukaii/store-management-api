@@ -50,6 +50,10 @@ public class ProductsService {
 
     @SneakyThrows
     private void create(ImportedProduct imported) {
+        Product existent = repository.findByIntegrationName(imported.getName()).orElse(null);
+
+        if(existent != null) return;
+
         Product newProduct = new Product();
 
         newProduct.setName(imported.getName());
