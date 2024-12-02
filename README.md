@@ -62,13 +62,14 @@ Siga os passos abaixo para rodar a aplicação utilizando Docker:
     - Substitua `MY_DATABASE_HOST`, `MY_DATABASE_PORT`, `MY_DATABASE_NAME`, `MY_DATABASE_USER` e `MY_DATABASE_PASSWORD`
       pelas informações do seu banco de dados
 
-2. Construir a imagem Docker:
+2. Ter o docker instalado
     ```shell
     docker build -t store-management-api .
     ```
-3. Rodar o container:
+3. Executar o script
     ```shell
-    docker run -d -p 7808:8080 --name store-management-api --env-file .env store-management-api
+    chmod +x docker-run.sh
+    ./docker-run.sh
     ```
 4. A aplicação estará disponível em: http://localhost:7808
 
