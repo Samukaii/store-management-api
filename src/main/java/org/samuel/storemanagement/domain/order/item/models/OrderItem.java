@@ -20,6 +20,7 @@ public class OrderItem {
     long id;
 
     private String name;
+    private String integrationName;
 
     @ManyToOne
     @JoinColumn(name = "order_id")
