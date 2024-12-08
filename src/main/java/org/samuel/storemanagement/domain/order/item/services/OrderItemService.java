@@ -3,6 +3,7 @@ package org.samuel.storemanagement.domain.order.item.services;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.samuel.storemanagement.domain.analytics.dtos.OrderItemSelling;
+import org.samuel.storemanagement.domain.order.item.dtos.OrderItemAutocomplete;
 import org.samuel.storemanagement.domain.order.item.dtos.OrderItemCreate;
 import org.samuel.storemanagement.domain.order.item.events.OrderItemEventPublisher;
 import org.samuel.storemanagement.domain.order.item.exceptions.OrderItemNotFoundException;
@@ -80,10 +81,10 @@ public class OrderItemService {
         return repository.findAllByName(product.getIntegrationName());
     }
 
-    public List<OrderItem> autocomplete(Map<String, String> filters) {
+    public List<OrderItemAutocomplete> autocomplete(Map<String, String> filters) {
         var specification = specificationService.buildSpecification(filters);
 
-        return repository.findAll(specification);
+        return repository.autocomplete(specification);
     }
 
     public void save(OrderItem orderItem) {
