@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.*;
 import org.samuel.storemanagement.domain.analytics.dtos.OrderItemSelling;
+import org.samuel.storemanagement.domain.order.item.dtos.OrderItemAutocomplete;
 import org.samuel.storemanagement.domain.order.item.models.OrderItem;
 import org.samuel.storemanagement.domain.order.order.models.Order;
 import org.samuel.storemanagement.domain.product.product.models.Product;
@@ -36,6 +37,30 @@ public class OrderItemRepositoryCustomImpl implements OrderItemRepositoryCustom 
                 productJoin.get("name"),
                 orderJoin.get("date")
         ));
+
+        return entityManager.createQuery(query).getResultList();
+    }
+
+    @Override
+    public List<OrderItemAutocomplete> autocomplete(Specification<OrderItem> specification) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<OrderItemAutocomplete> query = cb.createQuery(OrderItemAutocomplete.class);
+        Root<OrderItem> root = query.from(OrderItem.class);
+
+        Predicate predicate = cb.conjunction();
+
+        query.where(cb.and(predicate, specification.toPredicate(root, query, cb)));
+
+        query.select(cb.construct(
+                OrderItemAutocomplete.class,
+                root.get("integrationName"),
+                root.get("name")
+        ));
+
+        query.groupBy(
+            root.get("name"),
+            root.get("integrationName")
+        );
 
         return entityManager.createQuery(query).getResultList();
     }
