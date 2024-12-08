@@ -85,8 +85,17 @@ public class FilterSpecificationService<T> {
         });
 
         operators.put("equal", (root, builder, key, value) -> {
-            Object convertedValue = Double.valueOf(value);
-            return builder.equal(resolvePath(root, key), convertedValue);
+            Path<?> path = resolvePath(root, key);
+
+            Object convertedValue;
+
+            try {
+                convertedValue = Double.valueOf(value);
+            } catch (NumberFormatException e) {
+                convertedValue = String.valueOf(value);
+            }
+
+            return builder.equal(path, convertedValue);
         });
 
         operators.put("search", (root, builder, key, value) ->

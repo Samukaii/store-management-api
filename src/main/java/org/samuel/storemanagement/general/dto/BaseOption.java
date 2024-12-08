@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 @Builder
 public class BaseOption {
-    Integer id;
+    Long id;
     String name;
 }
