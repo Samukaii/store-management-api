@@ -47,7 +47,7 @@ public interface PreparationIngredientMapper {
         };
 
         return BaseOption.builder()
-                .id(unit.ordinal())
+                .id((long) unit.ordinal())
                 .name(name).build();
     }
 

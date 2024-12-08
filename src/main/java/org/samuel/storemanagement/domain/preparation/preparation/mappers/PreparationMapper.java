@@ -27,7 +27,7 @@ public interface PreparationMapper {
     default BaseOption unitMeasurementToOption(MeasurementUnit measurementUnit) {
         var builder = BaseOption.builder();
 
-        builder.id(measurementUnit.ordinal());
+        builder.id((long) measurementUnit.ordinal());
 
         switch (measurementUnit) {
             case UNIT -> builder.name("Unidade");

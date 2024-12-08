@@ -37,7 +37,7 @@ public interface ProductIngredientMapper {
         };
 
         return BaseOption.builder()
-                .id(unit.ordinal())
+                .id((long) unit.ordinal())
                 .name(name).build();
     }
 
