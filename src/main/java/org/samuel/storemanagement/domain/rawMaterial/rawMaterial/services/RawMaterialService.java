@@ -31,9 +31,11 @@ public class RawMaterialService {
     public RawMaterial create(RawMaterialCreate payload) throws RawMaterialRequiredFieldNotReceivedException {
         RawMaterial material = mapper.toModel(payload);
 
-        RawMaterialCategory category = categoryService.findById(payload.getCategoryId());
+        if(payload.getCategoryId() != null) {
+            RawMaterialCategory category = categoryService.findById(payload.getCategoryId());
 
-        material.setCategory(category);
+            material.setCategory(category);
+        }
 
         return save(material);
     }
