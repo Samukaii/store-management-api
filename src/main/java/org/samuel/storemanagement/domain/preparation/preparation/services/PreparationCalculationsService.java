@@ -25,6 +25,11 @@ public class PreparationCalculationsService {
     }
 
     private void calculateCostPerUnit(Preparation preparation) {
+        if(preparation.getQuantity() <= 0) {
+            preparation.setCostPerUnit(0d);
+            return;
+        }
+
         double result = preparation.getTotalCost() / preparation.getQuantity();
 
         preparation.setCostPerUnit(result);

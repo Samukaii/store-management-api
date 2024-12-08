@@ -8,10 +8,10 @@ import org.springframework.context.ApplicationEvent;
 @Getter
 @Setter
 public class PreparationChangeEvent extends ApplicationEvent {
-    private Preparation foodInput;
+    private Preparation preparation;
 
     public PreparationChangeEvent(Preparation event) {
         super(event);
-        foodInput = event;
+        preparation = event;
     }
 }

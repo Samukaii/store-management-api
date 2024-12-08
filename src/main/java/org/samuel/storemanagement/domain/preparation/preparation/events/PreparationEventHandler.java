@@ -18,8 +18,10 @@ public class PreparationEventHandler {
     public void updateTotalCost(PreparationIngredientChangeEvent event) {
         PreparationIngredient ingredient = event.getPreparationIngredient();
 
+        if(ingredient.getPreparation() == null) return;
+
         calculationsService.calculateCosts(ingredient.getPreparation());
-        System.out.println(ingredient.getPreparation().getTotalCost());
+
         calculationsService.save(ingredient.getPreparation());
     }
 }
