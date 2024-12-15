@@ -1,6 +1,8 @@
 package org.samuel.storemanagement.domain.preparation.preparation.exceptions;
 
-public class PreparationNotFoundException extends Exception {
+import org.samuel.storemanagement.general.exceptions.ResourceNotFoundException;
+
+public class PreparationNotFoundException extends ResourceNotFoundException {
     public PreparationNotFoundException() {
         super("Preparo não encontrado");
     }

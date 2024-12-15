@@ -1,6 +1,8 @@
 package org.samuel.storemanagement.domain.rawMaterial.category.exceptions;
 
-public class RawMaterialCategoryNotFoundException extends Exception {
+import org.samuel.storemanagement.general.exceptions.ResourceNotFoundException;
+
+public class RawMaterialCategoryNotFoundException extends ResourceNotFoundException {
     public RawMaterialCategoryNotFoundException() {
         super("Categoria não encontrada!");
     }

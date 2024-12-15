@@ -1,6 +1,8 @@
 package org.samuel.storemanagement.domain.rawMaterial.rawMaterial.exceptions;
 
-public class RawMaterialNotFoundException extends Exception {
+import org.samuel.storemanagement.general.exceptions.ResourceNotFoundException;
+
+public class RawMaterialNotFoundException extends ResourceNotFoundException {
     public RawMaterialNotFoundException() {
         super("Insumo não encontrado!");
     }
