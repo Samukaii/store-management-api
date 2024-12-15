@@ -3,7 +3,6 @@ package org.samuel.storemanagement.domain.order.order.services;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.samuel.storemanagement.domain.analytics.dtos.OrderByPeriodResponse;
 import org.samuel.storemanagement.domain.order.item.mappers.OrderItemMapper;
 import org.samuel.storemanagement.domain.order.item.models.OrderItem;
@@ -18,6 +17,7 @@ import org.samuel.storemanagement.general.dto.FilePayload;
 import org.samuel.storemanagement.general.filters.FilterSpecificationService;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.ZonedDateTime;
@@ -34,8 +34,7 @@ public class OrderService {
     private final FilterSpecificationService<Order> specificationService;
     private final OrderItemMapper orderItemMapper;
 
-    @SneakyThrows
-    public void importOrders(FilePayload payload) {
+    public void importOrders(FilePayload payload) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
 
         List<ImportedOrder> importedOrders = objectMapper.readValue(
@@ -47,7 +46,6 @@ public class OrderService {
         importedOrders.forEach(this::create);
     }
 
-    @SneakyThrows
     private void create(ImportedOrder imported) {
         Order existentOrder = repository.findByCode(imported.getTitle()).orElse(null);
 

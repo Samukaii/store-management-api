@@ -2,14 +2,15 @@ package org.samuel.storemanagement.domain.order.order.controllers;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.samuel.storemanagement.domain.order.order.dtos.OrderResponse;
+import org.samuel.storemanagement.domain.order.order.exceptions.OrderNotFoundException;
 import org.samuel.storemanagement.domain.order.order.mappers.OrderMapper;
 import org.samuel.storemanagement.domain.order.order.services.OrderService;
 import org.samuel.storemanagement.general.dto.FilePayload;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -22,22 +23,19 @@ public class OrderController {
     private final OrderMapper mapper;
 
     @PostMapping
-    @SneakyThrows
-    public ResponseEntity<?> importOrders(@RequestBody @ModelAttribute FilePayload payload) {
+    public ResponseEntity<?> importOrders(@RequestBody @ModelAttribute FilePayload payload) throws IOException {
         service.importOrders(payload);
 
         return ResponseEntity.ok().build();
     }
 
     @GetMapping
-    @SneakyThrows
     public ResponseEntity<List<OrderResponse>> getAll(@RequestParam Map<String, String> params) {
         return ResponseEntity.ok().body(mapper.toListDto(service.findAll(params)));
     }
 
     @GetMapping("/{id}")
-    @SneakyThrows
-    public ResponseEntity<OrderResponse> getById(@PathVariable Long id) {
+    public ResponseEntity<OrderResponse> getById(@PathVariable Long id) throws OrderNotFoundException {
         return ResponseEntity.ok().body(this.mapper.toDto(service.findById(id)));
     }
 

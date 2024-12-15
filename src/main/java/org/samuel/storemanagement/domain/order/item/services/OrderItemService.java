@@ -1,7 +1,6 @@
 package org.samuel.storemanagement.domain.order.item.services;
 
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.samuel.storemanagement.domain.analytics.dtos.OrderItemSelling;
 import org.samuel.storemanagement.domain.order.item.dtos.OrderItemAutocomplete;
 import org.samuel.storemanagement.domain.order.item.dtos.OrderItemCreate;
@@ -25,12 +24,10 @@ public class OrderItemService {
     private final OrderItemEventPublisher publisher;
     private final FilterSpecificationService<OrderItem> specificationService;
 
-    @SneakyThrows
     public void importOrderItems(Order order, List<OrderItemCreate> orderItems) {
         orderItems.forEach(item -> create(order, item));
     }
 
-    @SneakyThrows
     private void create(Order order, OrderItemCreate payload) {
         var builder = OrderItem.builder();
 
@@ -42,14 +39,11 @@ public class OrderItemService {
         save(builder.build());
     }
 
-    @SneakyThrows
-    public OrderItem findById(Long productFoodInputId, Long productId) {
+    public OrderItem findById(Long productFoodInputId, Long productId) throws OrderItemNotFoundException {
         return repository.findByIdAndOrderId(productFoodInputId, productId).orElseThrow(OrderItemNotFoundException::new);
     }
 
     public List<OrderItemSelling> getBestSellingProducts(Map<String, String> params) {
-        System.out.println(params);
-
         var specification = this.specificationService.buildSpecification(params);
 
         List<OrderItemSelling> orders = repository.getBestSelling(specification);
