@@ -2,6 +2,7 @@ package org.samuel.storemanagement.domain.rawMaterial.rawMaterial.mappers;
 
 import org.mapstruct.*;
 import org.samuel.storemanagement.domain.rawMaterial.rawMaterial.dtos.RawMaterialCreate;
+import org.samuel.storemanagement.domain.rawMaterial.rawMaterial.dtos.RawMaterialUpdate;
 import org.samuel.storemanagement.domain.rawMaterial.rawMaterial.dtos.RawMaterialViewResponse;
 import org.samuel.storemanagement.domain.rawMaterial.rawMaterial.models.RawMaterial;
 import org.samuel.storemanagement.general.dto.BaseOption;
@@ -20,7 +21,7 @@ public interface RawMaterialMapper {
     RawMaterial toModel(RawMaterialCreate payload);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void update(RawMaterialCreate payload, @MappingTarget RawMaterial entity);
+    void update(RawMaterialUpdate payload, @MappingTarget RawMaterial entity);
 
 
     @Named("measurementUnitOption")

@@ -5,6 +5,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.samuel.storemanagement.domain.rawMaterial.category.dtos.RawMaterialCategoryCreate;
+import org.samuel.storemanagement.domain.rawMaterial.category.dtos.RawMaterialCategoryUpdate;
 import org.samuel.storemanagement.domain.rawMaterial.category.dtos.RawMaterialCategoryViewResponse;
 import org.samuel.storemanagement.domain.rawMaterial.category.models.RawMaterialCategory;
 
@@ -18,5 +19,5 @@ public interface RawMaterialCategoryMapper {
     RawMaterialCategory toEntity(RawMaterialCategoryCreate category);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void update(RawMaterialCategoryCreate payload, @MappingTarget RawMaterialCategory entity);
+    void update(RawMaterialCategoryUpdate payload, @MappingTarget RawMaterialCategory entity);
 }

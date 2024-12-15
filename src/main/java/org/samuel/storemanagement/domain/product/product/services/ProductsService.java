@@ -34,9 +34,6 @@ public class ProductsService {
     public Product create(ProductCreate payload) throws ProductCategoryNotFoundException {
         Product product = new Product();
 
-        if (payload.getName() == null)
-            throw new ProductFieldNotReceivedException("nome");
-
         if(payload.getCategoryId() != null) {
             ProductCategory category = categoryService.findById(payload.getCategoryId());
             product.setCategory(category);

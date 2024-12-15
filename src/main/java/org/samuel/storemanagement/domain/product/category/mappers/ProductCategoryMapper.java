@@ -5,6 +5,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.samuel.storemanagement.domain.product.category.dtos.ProductCategoryCreate;
+import org.samuel.storemanagement.domain.product.category.dtos.ProductCategoryUpdate;
 import org.samuel.storemanagement.domain.product.category.dtos.ProductCategoryViewResponse;
 import org.samuel.storemanagement.domain.product.category.models.ProductCategory;
 
@@ -18,5 +19,5 @@ public interface ProductCategoryMapper {
     ProductCategory toEntity(ProductCategoryCreate category);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void update(ProductCategoryCreate payload, @MappingTarget ProductCategory entity);
+    void update(ProductCategoryUpdate payload, @MappingTarget ProductCategory entity);
 }
