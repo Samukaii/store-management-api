@@ -1,6 +1,8 @@
 package org.samuel.storemanagement.domain.order.order.exceptions;
 
-public class OrderNotFoundException extends Exception {
+import org.samuel.storemanagement.general.exceptions.ResourceNotFoundException;
+
+public class OrderNotFoundException extends ResourceNotFoundException {
     public OrderNotFoundException() {
         super("Insumo não encontrado!");
     }
