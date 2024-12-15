@@ -1,8 +1,8 @@
 package org.samuel.storemanagement.domain.product.category.services;
 
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.samuel.storemanagement.domain.product.category.dtos.ProductCategoryCreate;
+import org.samuel.storemanagement.domain.product.category.dtos.ProductCategoryUpdate;
 import org.samuel.storemanagement.domain.product.category.exceptions.ProductCategoryNotFoundException;
 import org.samuel.storemanagement.domain.product.category.mappers.ProductCategoryMapper;
 import org.samuel.storemanagement.domain.product.category.models.ProductCategory;
@@ -21,7 +21,6 @@ public class ProductCategoryService {
     private final ProductCategoryMapper mapper;
     private final FilterSpecificationService<ProductCategory> specificationService;
 
-    @SneakyThrows
     public ProductCategory create(ProductCategoryCreate payload) {
         ProductCategory result = mapper.toEntity(payload);
 
@@ -42,8 +41,7 @@ public class ProductCategoryService {
         return repository.findAll(specification);
     }
 
-    @SneakyThrows
-    public ProductCategory updateById(Long id, ProductCategoryCreate payload) throws ProductNotFoundException {
+    public ProductCategory updateById(Long id, ProductCategoryUpdate payload) throws ProductNotFoundException, ProductCategoryNotFoundException {
         ProductCategory category = findById(id);
 
         mapper.update(payload, category);

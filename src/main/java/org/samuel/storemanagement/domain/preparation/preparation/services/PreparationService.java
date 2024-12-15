@@ -1,7 +1,6 @@
 package org.samuel.storemanagement.domain.preparation.preparation.services;
 
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.samuel.storemanagement.domain.preparation.preparation.dtos.PreparationCreate;
 import org.samuel.storemanagement.domain.preparation.preparation.dtos.PreparationUpdate;
 import org.samuel.storemanagement.domain.preparation.preparation.events.PreparationPublisher;
@@ -25,7 +24,6 @@ public class PreparationService {
     private final PreparationCalculationsService calculationsService;
     private final FilterSpecificationService<Preparation> specificationService;
 
-    @SneakyThrows
     public Preparation create(PreparationCreate payload) {
         return save(mapper.toModel(payload));
     }
@@ -42,8 +40,7 @@ public class PreparationService {
         return repository.findAll(specification);
     }
 
-    @SneakyThrows
-    public Preparation updateById(Long id, PreparationUpdate payload) {
+    public Preparation updateById(Long id, PreparationUpdate payload) throws PreparationNotFoundException {
         Preparation foundPreparation = repository.findById(id).orElseThrow(PreparationNotFoundException::new);
 
         mapper.update(payload, foundPreparation);

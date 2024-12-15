@@ -1,9 +1,9 @@
 package org.samuel.storemanagement.domain.rawMaterial.category.services;
 
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.samuel.storemanagement.domain.product.product.exceptions.ProductNotFoundException;
 import org.samuel.storemanagement.domain.rawMaterial.category.dtos.RawMaterialCategoryCreate;
+import org.samuel.storemanagement.domain.rawMaterial.category.dtos.RawMaterialCategoryUpdate;
 import org.samuel.storemanagement.domain.rawMaterial.category.exceptions.RawMaterialCategoryNotFoundException;
 import org.samuel.storemanagement.domain.rawMaterial.category.mappers.RawMaterialCategoryMapper;
 import org.samuel.storemanagement.domain.rawMaterial.category.models.RawMaterialCategory;
@@ -21,7 +21,6 @@ public class RawMaterialCategoryService {
     private final RawMaterialCategoryMapper mapper;
     private final FilterSpecificationService<RawMaterialCategory> specificationService;
 
-    @SneakyThrows
     public RawMaterialCategory create(RawMaterialCategoryCreate payload) {
         RawMaterialCategory result = mapper.toEntity(payload);
 
@@ -42,8 +41,7 @@ public class RawMaterialCategoryService {
         return repository.findAll(specification);
     }
 
-    @SneakyThrows
-    public RawMaterialCategory updateById(Long id, RawMaterialCategoryCreate payload) throws ProductNotFoundException {
+    public RawMaterialCategory updateById(Long id, RawMaterialCategoryUpdate payload) throws ProductNotFoundException, RawMaterialCategoryNotFoundException {
         RawMaterialCategory category = findById(id);
 
         mapper.update(payload, category);

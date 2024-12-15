@@ -3,13 +3,13 @@ package org.samuel.storemanagement.domain.product.product.services;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
+import org.samuel.storemanagement.domain.product.category.exceptions.ProductCategoryNotFoundException;
 import org.samuel.storemanagement.domain.product.category.models.ProductCategory;
 import org.samuel.storemanagement.domain.product.category.services.ProductCategoryService;
 import org.samuel.storemanagement.domain.product.product.dtos.ImportedProduct;
+import org.samuel.storemanagement.domain.product.product.dtos.ProductCreate;
 import org.samuel.storemanagement.domain.product.product.dtos.ProductUpdate;
 import org.samuel.storemanagement.domain.product.product.events.ProductEventPublisher;
-import org.samuel.storemanagement.domain.product.product.exceptions.ProductFieldNotReceivedException;
 import org.samuel.storemanagement.domain.product.product.exceptions.ProductNotFoundException;
 import org.samuel.storemanagement.domain.product.product.models.Product;
 import org.samuel.storemanagement.domain.product.product.repositories.ProductsRepository;
@@ -17,6 +17,7 @@ import org.samuel.storemanagement.general.dto.FilePayload;
 import org.samuel.storemanagement.general.filters.FilterSpecificationService;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -30,8 +31,7 @@ public class ProductsService {
     private final ProductEventPublisher publisher;
     private final FilterSpecificationService<Product> filterSpecificationService;
 
-    @SneakyThrows
-    public Product create(ProductUpdate payload) throws ProductFieldNotReceivedException {
+    public Product create(ProductCreate payload) throws ProductCategoryNotFoundException {
         Product product = new Product();
 
         if (payload.getName() == null)
@@ -48,7 +48,6 @@ public class ProductsService {
         return save(product);
     }
 
-    @SneakyThrows
     private void create(ImportedProduct imported) {
         Product existent = repository.findByIntegrationName(imported.getName()).orElse(null);
 
@@ -70,8 +69,7 @@ public class ProductsService {
         save(existentProduct);
     }
 
-    @SneakyThrows
-    public void importProducts(FilePayload payload) {
+    public void importProducts(FilePayload payload) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
 
         List<ImportedProduct> importedOrders = objectMapper.readValue(
@@ -87,8 +85,7 @@ public class ProductsService {
         return repository.findById(id).orElse(null);
     }
 
-    @SneakyThrows
-    public Product updateById(Long id, ProductUpdate product) throws ProductNotFoundException {
+    public Product updateById(Long id, ProductUpdate product) throws ProductNotFoundException, ProductCategoryNotFoundException {
         Product productToUpdate = repository.findById(id).orElseThrow(ProductNotFoundException::new);
 
         publisher.emitPrePersist(productToUpdate);

@@ -3,10 +3,11 @@ package org.samuel.storemanagement.domain.rawMaterial.rawMaterial.controllers;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.samuel.storemanagement.domain.rawMaterial.category.exceptions.RawMaterialCategoryNotFoundException;
 import org.samuel.storemanagement.domain.rawMaterial.rawMaterial.dtos.RawMaterialCreate;
+import org.samuel.storemanagement.domain.rawMaterial.rawMaterial.dtos.RawMaterialUpdate;
 import org.samuel.storemanagement.domain.rawMaterial.rawMaterial.dtos.RawMaterialViewResponse;
 import org.samuel.storemanagement.domain.rawMaterial.rawMaterial.exceptions.RawMaterialNotFoundException;
-import org.samuel.storemanagement.domain.rawMaterial.rawMaterial.exceptions.RawMaterialRequiredFieldNotReceivedException;
 import org.samuel.storemanagement.domain.rawMaterial.rawMaterial.mappers.RawMaterialMapper;
 import org.samuel.storemanagement.domain.rawMaterial.rawMaterial.services.RawMaterialService;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ public class RawMaterialController {
     private final RawMaterialMapper mapper;
 
     @PostMapping
-    public ResponseEntity<RawMaterialViewResponse> create(@RequestBody @Valid RawMaterialCreate product) throws RawMaterialRequiredFieldNotReceivedException {
+    public ResponseEntity<RawMaterialViewResponse> create(@RequestBody @Valid RawMaterialCreate product) throws RawMaterialCategoryNotFoundException {
         return ResponseEntity.ok().body(mapper.toDto(service.create(product)));
     }
 
@@ -44,13 +45,13 @@ public class RawMaterialController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<RawMaterialViewResponse> getById(@PathVariable Long id, @RequestBody RawMaterialCreate payload) throws RawMaterialNotFoundException {
+    public ResponseEntity<RawMaterialViewResponse> updateById(@PathVariable Long id, @RequestBody @Valid RawMaterialUpdate payload) throws RawMaterialNotFoundException, RawMaterialCategoryNotFoundException {
         return ResponseEntity.ok().body(this.mapper.toDto(service.updateById(id, payload)));
     }
 
     @Transactional
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteById(@PathVariable Long id) {
+    public ResponseEntity<String> deleteById(@PathVariable Long id) throws RawMaterialNotFoundException {
         service.deleteById(id);
 
         return ResponseEntity.noContent().build();

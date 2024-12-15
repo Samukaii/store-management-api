@@ -1,12 +1,15 @@
 package org.samuel.storemanagement.domain.product.category.controllers;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.samuel.storemanagement.domain.product.category.dtos.ProductCategoryCreate;
+import org.samuel.storemanagement.domain.product.category.dtos.ProductCategoryUpdate;
 import org.samuel.storemanagement.domain.product.category.dtos.ProductCategoryViewResponse;
+import org.samuel.storemanagement.domain.product.category.exceptions.ProductCategoryNotFoundException;
 import org.samuel.storemanagement.domain.product.category.mappers.ProductCategoryMapper;
 import org.samuel.storemanagement.domain.product.category.services.ProductCategoryService;
+import org.samuel.storemanagement.domain.product.product.exceptions.ProductNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,13 +25,11 @@ public class ProductCategoryController {
     private final ProductCategoryMapper mapper;
 
     @PostMapping
-    @SneakyThrows
-    public ResponseEntity<ProductCategoryViewResponse> create(@RequestBody ProductCategoryCreate payload) {
+    public ResponseEntity<ProductCategoryViewResponse> create(@RequestBody @Valid ProductCategoryCreate payload) {
         return ResponseEntity.ok().body(mapper.toDto(service.create(payload)));
     }
 
     @GetMapping("/autocomplete")
-    @SneakyThrows
     public ResponseEntity<List<ProductCategoryViewResponse>> autocomplete(@RequestParam Map<String, String> filters) {
         return ResponseEntity.ok().body(mapper.toListDto(service.autocomplete(filters)));
     }
@@ -39,14 +40,12 @@ public class ProductCategoryController {
     }
 
     @GetMapping("/{id}")
-    @SneakyThrows
-    public ResponseEntity<ProductCategoryViewResponse> getById(@PathVariable Long id) {
+    public ResponseEntity<ProductCategoryViewResponse> getById(@PathVariable Long id) throws ProductCategoryNotFoundException {
         return ResponseEntity.ok().body(mapper.toDto(service.findById(id)));
     }
 
     @PutMapping("/{id}")
-    @SneakyThrows
-    public ResponseEntity<ProductCategoryViewResponse> getById(@PathVariable Long id, @RequestBody ProductCategoryCreate product) {
+    public ResponseEntity<ProductCategoryViewResponse> getById(@PathVariable Long id, @RequestBody @Valid ProductCategoryUpdate product) throws ProductCategoryNotFoundException, ProductNotFoundException {
         service.updateById(id, product);
 
         return ResponseEntity.ok().body(mapper.toDto(service.findById(id)));

@@ -1,13 +1,13 @@
 package org.samuel.storemanagement.domain.rawMaterial.rawMaterial.services;
 
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
+import org.samuel.storemanagement.domain.rawMaterial.category.exceptions.RawMaterialCategoryNotFoundException;
 import org.samuel.storemanagement.domain.rawMaterial.category.models.RawMaterialCategory;
 import org.samuel.storemanagement.domain.rawMaterial.category.services.RawMaterialCategoryService;
 import org.samuel.storemanagement.domain.rawMaterial.rawMaterial.dtos.RawMaterialCreate;
+import org.samuel.storemanagement.domain.rawMaterial.rawMaterial.dtos.RawMaterialUpdate;
 import org.samuel.storemanagement.domain.rawMaterial.rawMaterial.events.RawMaterialPublisher;
 import org.samuel.storemanagement.domain.rawMaterial.rawMaterial.exceptions.RawMaterialNotFoundException;
-import org.samuel.storemanagement.domain.rawMaterial.rawMaterial.exceptions.RawMaterialRequiredFieldNotReceivedException;
 import org.samuel.storemanagement.domain.rawMaterial.rawMaterial.mappers.RawMaterialMapper;
 import org.samuel.storemanagement.domain.rawMaterial.rawMaterial.models.RawMaterial;
 import org.samuel.storemanagement.domain.rawMaterial.rawMaterial.repositories.RawMaterialRepository;
@@ -27,8 +27,7 @@ public class RawMaterialService {
     private final RawMaterialCategoryService categoryService;
     private final FilterSpecificationService<RawMaterial> filterSpecificationService;
 
-    @SneakyThrows
-    public RawMaterial create(RawMaterialCreate payload) throws RawMaterialRequiredFieldNotReceivedException {
+    public RawMaterial create(RawMaterialCreate payload) throws RawMaterialCategoryNotFoundException {
         RawMaterial material = mapper.toModel(payload);
 
         if(payload.getCategoryId() != null) {
@@ -52,8 +51,7 @@ public class RawMaterialService {
         return foundFoodInput.orElseThrow(RawMaterialNotFoundException::new);
     }
 
-    @SneakyThrows
-    public RawMaterial updateById(Long id, RawMaterialCreate payload) throws RawMaterialNotFoundException {
+    public RawMaterial updateById(Long id, RawMaterialUpdate payload) throws RawMaterialNotFoundException, RawMaterialCategoryNotFoundException {
         RawMaterial material = repository.findById(id).orElseThrow(RawMaterialNotFoundException::new);
 
         mapper.update(payload, material);
@@ -67,7 +65,7 @@ public class RawMaterialService {
         return save(material);
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(Long id) throws RawMaterialNotFoundException {
         delete(id);
     }
 
@@ -99,8 +97,7 @@ public class RawMaterialService {
         return result;
     }
 
-    @SneakyThrows
-    public void delete(Long id) {
+    public void delete(Long id) throws RawMaterialNotFoundException {
         RawMaterial result = findById(id);
 
         publisher.emitDelete(result);

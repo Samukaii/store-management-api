@@ -1,18 +1,21 @@
 package org.samuel.storemanagement.domain.product.ingredient.services;
 
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
+import org.samuel.storemanagement.domain.preparation.preparation.exceptions.PreparationNotFoundException;
 import org.samuel.storemanagement.domain.preparation.preparation.models.Preparation;
 import org.samuel.storemanagement.domain.preparation.preparation.services.PreparationService;
 import org.samuel.storemanagement.domain.product.ingredient.dtos.ProductIngredientCreate;
 import org.samuel.storemanagement.domain.product.ingredient.events.ProductIngredientEventPublisher;
+import org.samuel.storemanagement.domain.product.ingredient.exceptions.ProductImportIngredientEmpty;
 import org.samuel.storemanagement.domain.product.ingredient.exceptions.ProductIngredientNotFoundException;
 import org.samuel.storemanagement.domain.product.ingredient.mappers.ProductIngredientMapper;
 import org.samuel.storemanagement.domain.product.ingredient.models.ProductIngredient;
 import org.samuel.storemanagement.domain.product.ingredient.repositories.ProductIngredientRepository;
+import org.samuel.storemanagement.domain.product.product.dtos.ProductImportIngredients;
 import org.samuel.storemanagement.domain.product.product.exceptions.ProductNotFoundException;
 import org.samuel.storemanagement.domain.product.product.models.Product;
 import org.samuel.storemanagement.domain.product.product.services.ProductsService;
+import org.samuel.storemanagement.domain.rawMaterial.rawMaterial.exceptions.RawMaterialNotFoundException;
 import org.samuel.storemanagement.domain.rawMaterial.rawMaterial.models.RawMaterial;
 import org.samuel.storemanagement.domain.rawMaterial.rawMaterial.services.RawMaterialService;
 import org.springframework.stereotype.Service;
@@ -29,8 +32,7 @@ public class ProductIngredientService {
     private final ProductIngredientEventPublisher publisher;
     private final ProductIngredientMapper mapper;
 
-    @SneakyThrows
-    public ProductIngredient create(Long productId, ProductIngredientCreate payload)  {
+    public ProductIngredient create(Long productId, ProductIngredientCreate payload) throws PreparationNotFoundException, RawMaterialNotFoundException {
         Product product = productsService.findById(productId);
 
         var productIngredient = mapper.toEntity(payload);
@@ -57,13 +59,19 @@ public class ProductIngredientService {
         return recalculateAndSave(productIngredient);
     }
 
-    @SneakyThrows
-    public ProductIngredient findById(Long productFoodInputId, Long productId) {
+    public ProductIngredient create(Long productId, ProductIngredient ingredient)  {
+        Product product = productsService.findById(productId);
+
+        ingredient.setProduct(product);
+
+        return recalculateAndSave(ingredient);
+    }
+
+    public ProductIngredient findById(Long productFoodInputId, Long productId) throws ProductIngredientNotFoundException {
         return repository.findByIdAndProductId(productFoodInputId, productId).orElseThrow(ProductIngredientNotFoundException::new);
     }
 
-    @SneakyThrows
-    public ProductIngredient updateById(Long productFoodInputId, Long productId, ProductIngredientCreate payload) {
+    public ProductIngredient updateById(Long productFoodInputId, Long productId, ProductIngredientCreate payload) throws ProductNotFoundException, PreparationNotFoundException, RawMaterialNotFoundException {
         ProductIngredient productIngredient = repository.findByIdAndProductId(productFoodInputId, productId).orElseThrow(ProductNotFoundException::new);
 
         mapper.updateEntity(productIngredient, payload);
@@ -88,7 +96,16 @@ public class ProductIngredientService {
         return recalculateAndSave(productIngredient);
     }
 
-    public void deleteById(Long ingredientId, Long productId) {
+    public void importIngredients(Long productId, ProductImportIngredients payload) throws ProductImportIngredientEmpty {
+        List<ProductIngredient> ingredientsToImport = findAll(payload.getProductId());
+
+        if(ingredientsToImport.isEmpty())
+            throw new ProductImportIngredientEmpty();
+
+        ingredientsToImport.forEach(ingredient -> create(productId, ingredient));
+    }
+
+    public void deleteById(Long ingredientId, Long productId) throws ProductIngredientNotFoundException {
         ProductIngredient productIngredient = findById(ingredientId, productId);
 
         repository.deleteByIdAndProductId(ingredientId, productId);

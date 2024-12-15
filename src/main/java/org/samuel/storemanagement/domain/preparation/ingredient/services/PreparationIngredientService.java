@@ -1,7 +1,6 @@
 package org.samuel.storemanagement.domain.preparation.ingredient.services;
 
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.samuel.storemanagement.domain.preparation.ingredient.dtos.PreparationIngredientCreate;
 import org.samuel.storemanagement.domain.preparation.ingredient.enumerations.PreparationIngredientType;
 import org.samuel.storemanagement.domain.preparation.ingredient.events.PreparationIngredientEventPublisher;
@@ -9,9 +8,11 @@ import org.samuel.storemanagement.domain.preparation.ingredient.exceptions.Prepa
 import org.samuel.storemanagement.domain.preparation.ingredient.mappers.PreparationIngredientMapper;
 import org.samuel.storemanagement.domain.preparation.ingredient.models.PreparationIngredient;
 import org.samuel.storemanagement.domain.preparation.ingredient.repositories.PreparationIngredientRepository;
+import org.samuel.storemanagement.domain.preparation.preparation.exceptions.PreparationNotFoundException;
 import org.samuel.storemanagement.domain.preparation.preparation.models.Preparation;
 import org.samuel.storemanagement.domain.preparation.preparation.services.PreparationService;
 import org.samuel.storemanagement.domain.product.product.exceptions.ProductNotFoundException;
+import org.samuel.storemanagement.domain.rawMaterial.rawMaterial.exceptions.RawMaterialNotFoundException;
 import org.samuel.storemanagement.domain.rawMaterial.rawMaterial.models.RawMaterial;
 import org.samuel.storemanagement.domain.rawMaterial.rawMaterial.services.RawMaterialService;
 import org.springframework.stereotype.Service;
@@ -28,8 +29,7 @@ public class PreparationIngredientService {
     private final PreparationIngredientCalculationsService calculationsService;
     private final PreparationIngredientMapper mapper;
 
-    @SneakyThrows
-    public PreparationIngredient create(Long productId, PreparationIngredientCreate payload)  {
+    public PreparationIngredient create(Long productId, PreparationIngredientCreate payload) throws PreparationNotFoundException, RawMaterialNotFoundException {
         Preparation preparation = preparationService.findById(productId);
 
         PreparationIngredient preparationIngredient = mapper.toEntity(payload);
@@ -47,13 +47,11 @@ public class PreparationIngredientService {
         return save(preparationIngredient);
     }
 
-    @SneakyThrows
-    public PreparationIngredient findById(Long productFoodInputId, Long productId) {
+    public PreparationIngredient findById(Long productFoodInputId, Long productId) throws PreparationIngredientNotFoundException {
         return repository.findByIdAndPreparationId(productFoodInputId, productId).orElseThrow(PreparationIngredientNotFoundException::new);
     }
 
-    @SneakyThrows
-    public PreparationIngredient updateById(Long productFoodInputId, Long productId, PreparationIngredientCreate payload) {
+    public PreparationIngredient updateById(Long productFoodInputId, Long productId, PreparationIngredientCreate payload) throws RawMaterialNotFoundException, ProductNotFoundException {
         PreparationIngredient preparationIngredient = repository.findByIdAndPreparationId(productFoodInputId, productId).orElseThrow(ProductNotFoundException::new);
 
         mapper.updateEntity(preparationIngredient, payload);
@@ -66,7 +64,7 @@ public class PreparationIngredientService {
         return save(preparationIngredient);
     }
 
-    public void deleteById(Long ingredientId, Long productId) {
+    public void deleteById(Long ingredientId, Long productId) throws PreparationIngredientNotFoundException {
         PreparationIngredient preparationIngredient = findById(ingredientId, productId);
 
         repository.deleteByIdAndPreparationId(ingredientId, productId);
