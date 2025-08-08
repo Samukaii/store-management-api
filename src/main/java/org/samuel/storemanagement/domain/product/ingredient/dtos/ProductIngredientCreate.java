@@ -16,4 +16,5 @@ public class ProductIngredientCreate {
     Double customCost;
     Long rawMaterialId;
     Long preparationId;
+    Long ingredientProductId;
 }

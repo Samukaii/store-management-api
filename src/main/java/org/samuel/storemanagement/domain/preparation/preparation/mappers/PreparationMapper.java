@@ -25,16 +25,16 @@ public interface PreparationMapper {
     List<PreparationViewResponse> toListDto(List<Preparation> foodInput);
 
     default BaseOption unitMeasurementToOption(MeasurementUnit measurementUnit) {
-        var builder = BaseOption.builder();
+        var baseOption = new BaseOption();
 
-        builder.id((long) measurementUnit.ordinal());
+        baseOption.setId((long) measurementUnit.ordinal());
 
         switch (measurementUnit) {
-            case UNIT -> builder.name("Unidade");
-            case LITER -> builder.name("L");
-            case KILOGRAMS -> builder.name("Kg");
+            case UNIT -> baseOption.setName("Unidade");
+            case LITER -> baseOption.setName("L");
+            case KILOGRAMS -> baseOption.setName("Kg");
         }
 
-        return builder.build();
+        return baseOption;
     }
 }

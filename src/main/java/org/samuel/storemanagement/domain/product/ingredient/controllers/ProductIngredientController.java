@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin
 @RestController
@@ -33,8 +34,8 @@ public class ProductIngredientController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductIngredientResponse>> getAll(@PathVariable Long productId) {
-        return ResponseEntity.ok().body(mapper.toListDto(service.findAll(productId)));
+    public ResponseEntity<List<ProductIngredientResponse>> getAll(@PathVariable Long productId, @RequestParam Map<String, String> params) {
+        return ResponseEntity.ok().body(service.findAllCalculated(productId, params));
     }
 
     @PostMapping("/import")

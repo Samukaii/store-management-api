@@ -46,9 +46,12 @@ public interface PreparationIngredientMapper {
             default -> "unidade(s)";
         };
 
-        return BaseOption.builder()
-                .id((long) unit.ordinal())
-                .name(name).build();
+        BaseOption baseOption = new BaseOption();
+
+        baseOption.setId((long) unit.ordinal());
+        baseOption.setName(name);
+
+        return baseOption;
     }
 
     @Named("quantity")

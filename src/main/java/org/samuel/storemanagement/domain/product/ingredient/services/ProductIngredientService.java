@@ -5,6 +5,7 @@ import org.samuel.storemanagement.domain.preparation.preparation.exceptions.Prep
 import org.samuel.storemanagement.domain.preparation.preparation.models.Preparation;
 import org.samuel.storemanagement.domain.preparation.preparation.services.PreparationService;
 import org.samuel.storemanagement.domain.product.ingredient.dtos.ProductIngredientCreate;
+import org.samuel.storemanagement.domain.product.ingredient.dtos.ProductIngredientResponse;
 import org.samuel.storemanagement.domain.product.ingredient.events.ProductIngredientEventPublisher;
 import org.samuel.storemanagement.domain.product.ingredient.exceptions.ProductImportIngredientEmpty;
 import org.samuel.storemanagement.domain.product.ingredient.exceptions.ProductIngredientNotFoundException;
@@ -18,9 +19,11 @@ import org.samuel.storemanagement.domain.product.product.services.ProductsServic
 import org.samuel.storemanagement.domain.rawMaterial.rawMaterial.exceptions.RawMaterialNotFoundException;
 import org.samuel.storemanagement.domain.rawMaterial.rawMaterial.models.RawMaterial;
 import org.samuel.storemanagement.domain.rawMaterial.rawMaterial.services.RawMaterialService;
+import org.samuel.storemanagement.general.filters.FilterSpecificationService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +34,7 @@ public class ProductIngredientService {
     private final ProductIngredientRepository repository;
     private final ProductIngredientEventPublisher publisher;
     private final ProductIngredientMapper mapper;
+    private final FilterSpecificationService<ProductIngredient> specificationService;
 
     public ProductIngredient create(Long productId, ProductIngredientCreate payload) throws PreparationNotFoundException, RawMaterialNotFoundException {
         Product product = productsService.findById(productId);
@@ -87,6 +91,11 @@ public class ProductIngredientService {
 
                 productIngredient.setPreparation(preparation);
             }
+            case PRODUCT -> {
+                Product product = productsService.findById(payload.getIngredientProductId());
+
+                productIngredient.setIngredientProduct(product);
+            }
             default -> {
                 productIngredient.setCustomName(payload.getCustomName());
                 productIngredient.setCustomCost(payload.getCustomCost());
@@ -116,6 +125,12 @@ public class ProductIngredientService {
 
     public List<ProductIngredient> findAll(Long productId) {
         return repository.findAllByProductId(productId);
+    }
+
+    public List<ProductIngredientResponse> findAllCalculated(Long productId, Map<String, String> params) {
+        var filters = specificationService.buildSpecification(params);
+
+        return repository.getAllCalculatedProducts(productId, filters);
     }
 
     public ProductIngredient recalculateAndSave(ProductIngredient productIngredient) {

@@ -33,8 +33,12 @@ public class ProductIngredient {
     private Preparation preparation;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
+
+    @ManyToOne
+    @JoinColumn(name = "ingredient_product_id")
+    private Product ingredientProduct;
 
     ProductIngredientType ingredientType;
 

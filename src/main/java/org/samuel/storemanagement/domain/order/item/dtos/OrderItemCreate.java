@@ -4,8 +4,6 @@ import lombok.Data;
 
 @Data
 public class OrderItemCreate {
-    String name;
-    Double price;
+    Long productId;
     Integer quantity;
-    Double total;
 }

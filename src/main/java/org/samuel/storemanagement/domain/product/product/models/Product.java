@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.samuel.storemanagement.domain.order.item.models.OrderItem;
 import org.samuel.storemanagement.domain.product.category.models.ProductCategory;
 import org.samuel.storemanagement.domain.product.ingredient.models.ProductIngredient;
+import org.samuel.storemanagement.general.enumerations.MeasurementUnit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,4 +45,7 @@ public class Product {
     private Double profit = 0d;
     private Integer salesQuantity = 0;
     private Double totalBilled = 0d;
+    private Double costPerUnit = 0d;
+    private Double quantity = 0d;
+    private MeasurementUnit measurementUnit = MeasurementUnit.UNIT;
 }

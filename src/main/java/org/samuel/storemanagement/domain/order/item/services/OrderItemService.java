@@ -9,7 +9,9 @@ import org.samuel.storemanagement.domain.order.item.exceptions.OrderItemNotFound
 import org.samuel.storemanagement.domain.order.item.models.OrderItem;
 import org.samuel.storemanagement.domain.order.item.repositories.OrderItemRepository;
 import org.samuel.storemanagement.domain.order.order.models.Order;
+import org.samuel.storemanagement.domain.order.order.repositories.OrderRepository;
 import org.samuel.storemanagement.domain.product.product.models.Product;
+import org.samuel.storemanagement.domain.product.product.services.ProductsService;
 import org.samuel.storemanagement.general.filters.FilterSpecificationService;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +24,9 @@ import java.util.Map;
 public class OrderItemService {
     private final OrderItemRepository repository;
     private final OrderItemEventPublisher publisher;
+    private final ProductsService productsService;
     private final FilterSpecificationService<OrderItem> specificationService;
+    private final OrderRepository orderRepository;
 
     public void importOrderItems(Order order, List<OrderItemCreate> orderItems) {
         orderItems.forEach(item -> create(order, item));
@@ -31,10 +35,20 @@ public class OrderItemService {
     private void create(Order order, OrderItemCreate payload) {
         var builder = OrderItem.builder();
 
-        builder.name(payload.getName())
+        var product = productsService.findById(payload.getProductId());
+
+        var total = product.getPrice() * payload.getQuantity();
+
+        builder.name(product.getName())
+                .integrationName(product.getName())
+                .product(product)
                 .quantity(payload.getQuantity())
                 .order(order)
-                .total(payload.getTotal());
+                .total(total);
+
+        OrderItem orderItem = builder.build();
+
+        System.out.println(orderItem.getProduct().getName());
 
         save(builder.build());
     }
@@ -85,5 +99,9 @@ public class OrderItemService {
         OrderItem result = repository.save(orderItem);
 
         publisher.emitChange(result);
+    }
+
+    public void addProducts(Order order, List<OrderItemCreate> products) {
+        products.forEach(product -> create(order, product));
     }
 }

@@ -1,6 +1,7 @@
 package org.samuel.storemanagement.domain.order.order.mappers;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.samuel.storemanagement.domain.order.order.dtos.OrderResponse;
 import org.samuel.storemanagement.domain.order.order.models.Order;
 

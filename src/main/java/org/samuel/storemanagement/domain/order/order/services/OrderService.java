@@ -8,6 +8,8 @@ import org.samuel.storemanagement.domain.order.item.mappers.OrderItemMapper;
 import org.samuel.storemanagement.domain.order.item.models.OrderItem;
 import org.samuel.storemanagement.domain.order.item.services.OrderItemService;
 import org.samuel.storemanagement.domain.order.order.dtos.ImportedOrder;
+import org.samuel.storemanagement.domain.order.order.dtos.OrderCreateDTO;
+import org.samuel.storemanagement.domain.order.order.dtos.OrderImportedDTO;
 import org.samuel.storemanagement.domain.order.order.enumerations.PeriodType;
 import org.samuel.storemanagement.domain.order.order.events.OrderEventPublisher;
 import org.samuel.storemanagement.domain.order.order.exceptions.OrderNotFoundException;
@@ -44,6 +46,16 @@ public class OrderService {
         );
 
         importedOrders.forEach(this::create);
+    }
+
+    public void create(OrderCreateDTO payload) {
+        Order newOrder = Order.builder()
+                .date(payload.getDate())
+                .build();
+
+        Order result = recalculateAndSave(newOrder);
+
+        orderItemService.addProducts(result, payload.getProducts());
     }
 
     private void create(ImportedOrder imported) {

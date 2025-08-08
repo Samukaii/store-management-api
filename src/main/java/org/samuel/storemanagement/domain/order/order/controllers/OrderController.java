@@ -2,11 +2,12 @@ package org.samuel.storemanagement.domain.order.order.controllers;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.samuel.storemanagement.domain.order.order.dtos.OrderCreateDTO;
+import org.samuel.storemanagement.domain.order.order.dtos.OrderImportedDTO;
 import org.samuel.storemanagement.domain.order.order.dtos.OrderResponse;
 import org.samuel.storemanagement.domain.order.order.exceptions.OrderNotFoundException;
 import org.samuel.storemanagement.domain.order.order.mappers.OrderMapper;
 import org.samuel.storemanagement.domain.order.order.services.OrderService;
-import org.samuel.storemanagement.general.dto.FilePayload;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,8 +24,8 @@ public class OrderController {
     private final OrderMapper mapper;
 
     @PostMapping
-    public ResponseEntity<?> importOrders(@RequestBody @ModelAttribute FilePayload payload) throws IOException {
-        service.importOrders(payload);
+    public ResponseEntity<?> create(@RequestBody OrderCreateDTO payload) throws IOException {
+        service.create(payload);
 
         return ResponseEntity.ok().build();
     }

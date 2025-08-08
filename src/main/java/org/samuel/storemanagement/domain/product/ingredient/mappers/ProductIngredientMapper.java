@@ -24,10 +24,10 @@ public interface ProductIngredientMapper {
     void updateEntity(@MappingTarget ProductIngredient productIngredient, ProductIngredientCreate payload);
 
     @Named("measurementUnit")
-    default BaseOption getHumanizedMeasurementUnit(ProductIngredient productIngredient) {
-        MeasurementUnit unit = getMeasurementUnit(productIngredient);
+    default BaseOption getHumanizedMeasurementUnit(ProductIngredient ingredient) {
+        MeasurementUnit unit = getMeasurementUnit(ingredient);
 
-        double quantity = productIngredient.getQuantity() == null ? 0 : productIngredient.getQuantity();
+        double quantity = ingredient.getQuantity() == null ? 0 : ingredient.getQuantity();
 
         String name = switch (unit) {
             case KILOGRAMS -> quantity < 1 ? "g" : "kg";
@@ -36,9 +36,12 @@ public interface ProductIngredientMapper {
             default -> "unidade(s)";
         };
 
-        return BaseOption.builder()
-                .id((long) unit.ordinal())
-                .name(name).build();
+        BaseOption baseOption = new BaseOption();
+
+        baseOption.setId((long) unit.ordinal());
+        baseOption.setName(name);
+
+        return baseOption;
     }
 
     @Named("name")
@@ -46,6 +49,7 @@ public interface ProductIngredientMapper {
         return switch (productIngredient.getIngredientType()) {
             case RAW_MATERIAL -> productIngredient.getRawMaterial().getName();
             case PREPARATION -> productIngredient.getPreparation().getName();
+            case PRODUCT -> productIngredient.getIngredientProduct().getName();
             default -> productIngredient.getCustomName();
         };
     }
@@ -66,6 +70,7 @@ public interface ProductIngredientMapper {
         return switch (productIngredient.getIngredientType()) {
             case RAW_MATERIAL -> productIngredient.getRawMaterial().getMeasurementUnit();
             case PREPARATION -> productIngredient.getPreparation().getMeasurementUnit();
+            case PRODUCT -> productIngredient.getIngredientProduct().getMeasurementUnit();
             default -> MeasurementUnit.PORTION;
         };
     }
